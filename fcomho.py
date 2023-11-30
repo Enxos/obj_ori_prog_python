@@ -137,10 +137,63 @@ class Szalloda():
 
     pass
 
-s = Szalloda('foobar')
-x = s.foglal(datetime.date(2023, 12, 13), 1, 'en')
-pprint(x)
-x = s.foglal(datetime.date(2023, 12, 14), 11, 'te')
-pprint(x)
-pprint(s.foglalasok())
-s.lemond(datetime.date(2023, 12, 14), 11)
+def menu():
+    print('0. Foglalas')
+    print('1. Lemondas')
+    print('2. Listazas')
+    print('3. brexit')
+    x = int(input('Valassz: '))
+    if x<0 or x>3:
+        raise Exception('Ez biza nem jo')
+    return x
+
+sz = Szalloda('Grand Hostel')
+sz.foglal(datetime.date(2023, 12, 2), 2, 'en' )
+sz.foglal(datetime.date(2023, 12, 5), 2, 'te' )
+sz.foglal(datetime.date(2023, 12, 7), 2, 'o' )
+sz.foglal(datetime.date(2023, 12, 11), 2, 'mi' )
+sz.foglal(datetime.date(2023, 12, 23), 2, 'ti' )
+sz.foglal(datetime.date(2023, 12, 23), 7, 'apache helicopter' )
+while True:
+    valasztas = menu()
+    if valasztas == 3:
+        print('Asta la vista, baby!')
+        break
+    elif valasztas == 0:
+        # foglal(self, datum, szobaszam, kicsoda):
+        try:
+            utyfel = input('Ugyfel: ')
+            szobaszam = int(input('Szobaszam: '))
+            strdatum = input('Datum(ISO8601): ')
+
+            dt = datetime.datetime.strptime(strdatum, '%Y-%m-%d')
+            datum = datetime.date(dt.year, dt.month, dt.day)
+
+            sz.foglal(datum = datum,
+                      szobaszam = szobaszam,
+                      kicsoda = utyfel)
+        except Exception as e:
+            print('Ez biza nem jott ossze: {e}'.format(e =str(e)))
+            continue
+    elif valasztas == 1:
+        # lemond(self, datum, szobaszam):
+        try:
+            szobaszam = int(input('Szobaszam: '))
+            strdatum = input('Datum(ISO8601): ')
+            dt = datetime.datetime.strptime(strdatum, '%Y-%m-%d')
+            datum = datetime.date(dt.year, dt.month, dt.day)
+
+            sz.lemond(datum, szobaszam)
+        except Exception as e:
+            print('Ez biza nem jott ossze: {e}'.format(e =str(e)))
+            continue
+            
+    elif valasztas == 2:
+        print('Foglalasok:')
+        for f in sz.foglalasok():
+            print('Szoba: {i} Datum: {d} Utyfel: {u}'.format(i = f.szobaszam,
+                                                             d = f.datum,
+                                                             u = f.utyfel))
+            pass
+        pass
+    pass
