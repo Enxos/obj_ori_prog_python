@@ -64,6 +64,11 @@ class Foglalas():
     @property
     def szobaszam(self):
         return self._szobaszam
+
+    def __repr__(self):
+        return '<Foglalas(datum={d}, szobaszam={sz}, utyfel={u})>'.format(d = self.datum,
+                                                                          sz = self.szobaszam,
+                                                                          u = self.utyfel)
     pass
 
 class Szalloda():
@@ -115,6 +120,21 @@ class Szalloda():
                                          szobaszam = szobaszam))
         return sz.ar
 
+    def lemond(self, datum, szobaszam):
+        if not isinstance(datum, datetime.date):
+            raise Exception('Ez bizony nem datum batyus!')
+
+        for i in range(len(self._foglalasok)):
+            f = self._foglalasok[i]
+            if f.szobaszam == szobaszam and datum == f.datum:
+                self._foglalasok.pop(i)
+                return
+            pass
+        raise Exception('Marpedig ilyen bezony nincs')
+
+    def foglalasok(self):
+        return self._foglalasok
+
     pass
 
 s = Szalloda('foobar')
@@ -122,3 +142,5 @@ x = s.foglal(datetime.date(2023, 12, 13), 1, 'en')
 pprint(x)
 x = s.foglal(datetime.date(2023, 12, 14), 11, 'te')
 pprint(x)
+pprint(s.foglalasok())
+s.lemond(datetime.date(2023, 12, 14), 11)
